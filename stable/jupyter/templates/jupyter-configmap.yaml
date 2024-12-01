@@ -499,7 +499,17 @@ data:
       log 'Configure align_mlrun.sh script'
       cat << EOF > ${ALIGN_MLRUN_SCRIPT}
     #!/bin/bash
-    #IGZ_ALIGN_MLRUN_REV_${ALIGN_MLRUN_REV}
+    #IGZ_ALIGN_MLRUN_REV_\${ALIGN_MLRUN_REV}
+    WITH_KFP=0
+
+    while [[ "\$#" -gt 0 ]]; do
+        case \$1 in
+            --with-kfp) WITH_KFP=1 ;;
+            *) echo "Unknown parameter passed: \$1"; exit 1 ;;
+        esac
+        shift
+    done
+
     for env in base jupyter; do
       if [ "\${CONDA_DEFAULT_ENV-}" = "\${env}" ]; then
         echo "Not allowed in conda (\${env}) environment where package updates are not persistent."
@@ -518,7 +528,11 @@ data:
         echo "Updating client..."
         pip uninstall -y mlrun
       fi
-      pip install mlrun[complete]==\${SERVER_MLRUN_VERSION}
+      if [ \${WITH_KFP} -eq 1 ]; then
+        pip install mlrun[complete-kfp]==\${SERVER_MLRUN_VERSION}
+      else
+        pip install mlrun[complete]==\${SERVER_MLRUN_VERSION}
+      fi
     fi
     EOF
       chmod a+x ${ALIGN_MLRUN_SCRIPT}
