@@ -529,7 +529,7 @@ data:
         pip uninstall -y mlrun
       fi
       if [ \${WITH_KFP} -eq 1 ]; then
-        pip install mlrun[complete,kfp]==\${SERVER_MLRUN_VERSION}
+        pip install mlrun[complete,kfp18]==\${SERVER_MLRUN_VERSION}
       else
         pip install mlrun[complete]==\${SERVER_MLRUN_VERSION}
       fi
