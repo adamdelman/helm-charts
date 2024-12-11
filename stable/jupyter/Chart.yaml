@@ -1,6 +1,6 @@
 version: 0.14.40
 apiVersion: v1
-appVersion: 3.4.8
+appVersion: 3.4.9
 name: jupyter
 description: Jupyter
 home: https://jupyter.org/
