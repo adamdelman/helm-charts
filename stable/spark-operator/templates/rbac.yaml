@@ -60,8 +60,13 @@ rules:
   verbs:
   - create
   - get
-  - delete
+  - list
+  - watch
+  - create
   - update
+  - patch
+  - delete
+  - deletecollection
 - apiGroups:
   - extensions
   - networking.k8s.io
