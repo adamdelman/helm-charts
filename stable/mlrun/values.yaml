@@ -611,6 +611,26 @@ db:
       periodSeconds: 10
       failureThreshold: 3
 
+    exporter:
+      enabled: false
+
+      name: db-exporter
+      fullnameOverride:
+      dataSource: "postgresql://postgres@mlrun-db:5432/mlrun?sslmode=disable"
+
+      image:
+        repository: quay.io/prometheuscommunity/postgres-exporter
+        tag: "v0.15.0"
+        pullPolicy: "IfNotPresent"
+
+      service:
+        labels: {}
+        annotations: {}
+        name: postgres-exporter
+        type: ClusterIP
+        externalPort: 9187
+        internalPort: 9187
+
 ui:
   name: ui
   fullnameOverride:
