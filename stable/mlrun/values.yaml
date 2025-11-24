@@ -383,6 +383,10 @@ db:
   name: db
   fullnameOverride:
 
+  # DB engine selector (used by your templates to switch images / settings)
+  # Leave as "mysql" for current behaviour; set to "postgres" to use mlrun/postgres.
+  engine: "mysql"
+
   persistence:
     enabled: false
     existingClaim:
@@ -575,6 +579,37 @@ db:
       #   innodb_use_native_aio: 0
       # will be passed as --innodb_use_native_aio=0
 
+  # Postgres configuration (used when db.engine == "postgres")
+  postgres:
+    image:
+      repository: "postgres"
+      tag: "16"
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+
+    service:
+      type: ClusterIP
+      port: 5432
+
+    # Extra env variables specific to postgres (e.g. POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD)
+    extraEnv: []
+    envFrom: []
+
+    readinessProbe:
+      exec:
+        command: ["pg_isready", "-U", "postgres", "-d", "mlrun", "-h", "127.0.0.1", "-p", "5432"]
+      initialDelaySeconds: 10
+      timeoutSeconds: 3
+      periodSeconds: 10
+      failureThreshold: 3
+
+    livenessProbe:
+      exec:
+        command: ["pg_isready", "-U", "postgres", "-d", "mlrun", "-h", "127.0.0.1", "-p", "5432"]
+      initialDelaySeconds: 30
+      timeoutSeconds: 5
+      periodSeconds: 10
+      failureThreshold: 3
 
 ui:
   name: ui
